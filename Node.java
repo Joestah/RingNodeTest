@@ -44,7 +44,7 @@ public class Node extends Thread {
                 try {
                     s = new Socket(ipAddress, neighbourPort);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Ring Complete");
                 }
                     if (s.isConnected()) {
                         System.out.println("Node on port " + port + "is connected" + neighbourPort);
