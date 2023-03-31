@@ -3,35 +3,49 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Node {
+public class Node extends Thread {
 
-    private String ipAddress;
+    private String ipAddress = "127.0.0.1";
     private int port;
     private int neighbourPort;
     private boolean hasToken;
     private ServerSocket serverSocket;
     private Socket s;
 
-    public Node(String ipAddress, int port, int neighbourPort) {
+    public Node(int port, int neighbourPort) {
         this.port = port;
         this.neighbourPort = neighbourPort;
-        this.ipAddress = ipAddress;
+
+    }
+
+    public static void main(String args[]){
+        if ((args.length < 2) || (args.length > 2)) {
+            System.out.println("Usage: [this port][next port]");
+            System.out.println("Only "+args.length+" parameters entered");
+            System.exit (1) ;
+        }
+        int tempPort = Integer.parseInt(args[0]);
+        int neighbourPort = Integer.parseInt(args[1]);
+
+        Node node = new Node(tempPort,neighbourPort);
+        node.start();
+
     }
 
     public void start() {
-        try {
-            s = new Socket(ipAddress, neighbourPort);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("This is Port: " + port + "  Neighbour: " + neighbourPort);
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Ring Complete");
         }
         while (true) {
             while(hasToken){
-
+                try {
+                    s = new Socket(ipAddress, neighbourPort);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                     if (s.isConnected()) {
                         System.out.println("Node on port " + port + "is connected" + neighbourPort);
                         this.hasToken = false;
@@ -47,6 +61,7 @@ public class Node {
                     }
                 try {
                     s.close();
+                    serverSocket.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -61,6 +76,11 @@ public class Node {
                                     +neighbourPort+ ") is still open!!") ;
             }
             try {
+                System.out.println("Awaiting Connnection to Ring Node");
+                if(serverSocket.isClosed()){
+                    System.out.println("Server Socket Hosting on:" + port+"Terminated");
+                    break;
+                }
 
                 Socket tempSocket = serverSocket.accept();
                 System.out.println("TOKEN RECEIVED ON PORT" + port);
