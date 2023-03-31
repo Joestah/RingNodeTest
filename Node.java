@@ -20,7 +20,7 @@ public class Node {
 
     public void start() {
         try {
-            s = new Socket(ipAddress, port);
+            s = new Socket(ipAddress, neighbourPort);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +38,7 @@ public class Node {
                     } else {
                         System.out.println("Node on port " + port + "failed to connect" + neighbourPort);
                         try {
-                            Thread.sleep(300);
+                            Thread.sleep(3000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
