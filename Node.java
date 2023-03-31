@@ -17,7 +17,6 @@ public class Node extends Thread {
         this.neighbourPort = neighbourPort;
 
     }
-
     public static void main(String args[]){
         if ((args.length < 2) || (args.length > 2)) {
             System.out.println("Usage: [this port][next port]");
