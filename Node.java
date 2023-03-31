@@ -60,7 +60,6 @@ public class Node extends Thread {
                     }
                 try {
                     s.close();
-                    serverSocket.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
